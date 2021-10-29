@@ -21,6 +21,10 @@ hardware: 64-bit ARMv8 machines
 hardware: arm64 cloud
 hardware-long: cloud platforms supporting arm64 virtual machines
 
+[amlogic-arm64_description]
+hardware: arm64 Amlogic
+hardware-long: Amlogic s905x boards
+
 [arm64_image]
 
 [relations]
