@@ -1,0 +1,5 @@
+##
+## file: sound/soc/meson/Kconifg
+##
+CONFIG_SND_MESON_GX_SOUND_CARD=m
+
