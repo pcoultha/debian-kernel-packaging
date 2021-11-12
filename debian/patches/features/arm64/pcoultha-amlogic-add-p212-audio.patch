@@ -1,0 +1,107 @@
+https://lore.kernel.org/all/20210101063737.26635-1-christianshewitt@gmail.com/
+From: Christian Hewitt <christianshewitt@gmail.com>
+To: Rob Herring <robh+dt@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Kevin Hilman <khilman@baylibre.com>,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH] arm64: dts: meson: shorten audio card names for alsa compatibility
+Date: Fri,  1 Jan 2021 06:37:37 +0000	[thread overview]
+Message-ID: <20210101063737.26635-1-christianshewitt@gmail.com> (raw)
+
+This patch shortens all audio card model names by dropping the SoC prefix
+(for conformity) and rewording those that are still longer than alsa's 15
+character name limit [0] to avoid userspace config issues.
+
+[0] https://github.com/torvalds/linux/blob/master/Documentation/sound/alsa-configuration.rst#common-parameters-for-top-sound-card-modules
+
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+
+I've been experimenting with alsa conf files to ensure alsa handles
+multi-channel audio properly (else channels are messed up) and it's
+been bugging me why an Odroid N2 showed surroundXX devices (defined in
+a common alsa conf) while a VIM3 only showed sysdefault devices. The
+eureka moment is discovering alsa enforces a 15-character limit on
+model names, so G12B-ODROID-N2 (14) works while longer names like
+G12B-KHADAS-VIM3 (16) truncate to e.g. G12B-KHADAS-VIM causing mismatch
+with the strings alsa-lib matches conf(s) against.
+
+VIM3:~ # cat /proc/asound/cards
+ 0 [G12BKHADASVIM3 ]: G12B-KHADAS-VIM - G12B-KHADAS-VIM3
+                      G12B-KHADAS-VIM3
+
+I'm using aliases.conf with alsa-lib to map 20+ card names back to
+two confs so I _could_ just map the truncated names, but this is not
+obvious for users and other maintainers so the better solution is
+shortening the names.
+
+
+Subject: [PATCH 08/12] arm64: dts: meson: add audio playback to p212-s905x dtsi
+From: Christian Hewitt <christianshewitt@xxxxxxxxx>
+Date: Sat, 18 Jul 2020 06:57:35 +0000
+In-reply-to: <20200718065739.7802-1-christianshewitt@gmail.com>
+
+Add initial audio support limited to HDMI i2s.
+
+Signed-off-by: Christian Hewitt <christianshewitt@xxxxxxxxx>
+---
+ .../dts/amlogic/meson-gxl-s905x-p212.dtsi     | 40 +++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+
+--- linux-5.15.1.orig/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
++++ linux-5.15.1/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
+@@ -11,6 +11,7 @@
+ /* Common DTSI for devices which are based on the P212 reference board. */
+ 
+ #include "meson-gxl-s905x.dtsi"
++#include <dt-bindings/sound/meson-aiu.h>
+ 
+ / {
+ 	aliases {
+@@ -85,6 +86,45 @@
+ 		clocks = <&wifi32k>;
+ 		clock-names = "ext_clock";
+ 	};
++
++	sound {
++		compatible = "amlogic,gx-sound-card";
++		model = "P212";
++		assigned-clocks = <&clkc CLKID_MPLL0>,
++				  <&clkc CLKID_MPLL1>,
++				  <&clkc CLKID_MPLL2>;
++		assigned-clock-parents = <0>, <0>, <0>;
++		assigned-clock-rates = <294912000>,
++				       <270950400>,
++				       <393216000>;
++		status = "okay";
++
++		dai-link-0 {
++			sound-dai = <&aiu AIU_CPU CPU_I2S_FIFO>;
++		};
++
++		dai-link-1 {
++			sound-dai = <&aiu AIU_CPU CPU_I2S_ENCODER>;
++			dai-format = "i2s";
++			mclk-fs = <256>;
++
++			codec-0 {
++				sound-dai = <&aiu AIU_HDMI CTRL_I2S>;
++			};
++		};
++
++		dai-link-2 {
++			sound-dai = <&aiu AIU_HDMI CTRL_OUT>;
++
++			codec-0 {
++				sound-dai = <&hdmi_tx>;
++			};
++		};
++	};
++};
++
++&aiu {
++	status = "okay";
+ };
+ 
+ &ethmac {
