@@ -1,3 +1,9 @@
+linux (5.15.2-1~exp1pcoultha1) UNRELEASED; urgency=medium
+
+  * Add snd-soc-meson-gx-sound-card module. Add to p212 device tree.
+
+ -- Pat Coulthard <pmcoulthard@gmail.com>  Mon, 15 Nov 2021 14:36:42 -0600
+
 linux (5.15.2-1~exp1) experimental; urgency=medium
 
   * New upstream stable update:
