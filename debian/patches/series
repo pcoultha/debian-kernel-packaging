@@ -86,6 +86,7 @@ features/arm64/arm64-dts-rockchip-Enable-the-USB-3.0-ports-on-ODROI.patch
 features/arm64/arm64-dts-rockchip-Add-SATA-support-to-ODROID-M1.patch
 features/arm64/arm64-dts-rockchip-Add-PCIEe-v3-nodes-to-ODROID-M1.patch
 features/arm64/arm64-dts-rockchip-Add-IR-receiver-node-to-ODROID-M1.patch
+features/arm64/pcoultha-amlogic-add-p212-audio.patch
 features/x86/x86-memtest-WARN-if-bad-RAM-found.patch
 features/x86/x86-make-x32-syscall-support-conditional.patch
 
