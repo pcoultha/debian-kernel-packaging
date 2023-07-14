@@ -1,3 +1,9 @@
+linux (6.1.37-1pcoultha1) UNRELEASED; urgency=medium
+
+  * Add sound card to p212 device tree.
+
+ -- Pat Coulthard <pmcoulthard@gmail.com>  Sat, 27 Nov 2021 16:03:42 -0600
+
 linux (6.1.37-1) bookworm-security; urgency=high
 
   * New upstream stable update:
