@@ -112,3 +112,6 @@ bugfix/all/kbuild-bpf-fix-btf-reproducibility.patch
 bugfix/powerpc/fbdev-offb-Update-expected-device-name.patch
 
 # ABI maintenance
+
+# DTS updates
+debian/disable-p212-bluetooth.patch
